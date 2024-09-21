@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="info" name="friendly">
+    <Properties>
+        <Property name="log-path">../logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- main log file, provide overall system behavior -->
+        <RollingFile name="services"
+                     fileName="${log-path}/iot_services.log"
+                     filePattern="${log-path}/iot_services-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="false">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} %level [%t] [%X{X-B3-TraceId},%X{X-B3-SpanId}] %c - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <!-- Logs all persistence events, includes Hibernate method execution and its parameters and connection pool -->
+        <RollingFile name="persistence"
+                     fileName="${log-path}/persistence.log"
+                     filePattern="${log-path}/persistence-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} %level [%t] [%X{X-B3-TraceId},%X{X-B3-SpanId}] %c - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="persistence-cache"
+                     fileName="${log-path}/persistence-cache.log"
+                     filePattern="${log-path}/persistence-cache-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} %level [%t] [%X{X-B3-TraceId},%X{X-B3-SpanId}] %c - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} %level{length=1} [%t] [%X{X-B3-TraceId},%X{X-B3-SpanId}] %c{1.} - %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+    </Appenders>
+
+    <Loggers>
+        <!-- Third-party Logging Section: Default to display WARNINGS, ERRORS, FATAL only -->
+        <Logger name="org.hibernate" additivity="false">
+            <AppenderRef ref="persistence" level="info"/>
+            <AppenderRef ref="STDOUT" level="info"/>
+        </Logger>
+        <Logger name="org.hibernate.SQL" additivity="false">
+            <AppenderRef ref="persistence" level="debug"/>
+            <AppenderRef ref="STDOUT" level="debug"/>
+        </Logger>
+        <Logger name="net.sf.ehcache" additivity="false">
+            <AppenderRef ref="persistence" level="info"/>
+            <AppenderRef ref="STDOUT" level="info"/>
+        </Logger>
+        <Logger name="com.zaxxer" additivity="false">
+            <AppenderRef ref="persistence" level="info"/>
+            <AppenderRef ref="STDOUT" level="info"/>
+        </Logger>
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="error"/>
+        <Logger name="org.springframework" level="info" />
+        <Logger name="org.apache" level="warn"/>
+        <Logger name="httpclient" level="warn"/>
+        <Logger name="org.springframework.web.socket.sockjs.client.SockJsClient" level="off"/>
+        <!-- Third-party Logging Section ENDS -->
+
+        <Root level="info">
+            <AppenderRef ref="services"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

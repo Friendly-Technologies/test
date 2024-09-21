@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+    </dependencies>
+    <parent>
+        <groupId>com.friendly</groupId>
+        <artifactId>ft-iot-webservice</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!--<relativePath/>-->
+        <!-- lookup parent from repository -->
+    </parent>
+    <artifactId>acs</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>acs</name>
+    <description>Friendly Technologies IoT library providing access to ACS SOAP methods</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>process-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/ACSWebService.wsdl</wsdl>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <name>Maven Plugin Snapshots</name>
+            <url>http://repository.apache.org/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>maven2</id>-->
+            <!--<url>https://repo1.maven.org/maven2/</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+</project>
